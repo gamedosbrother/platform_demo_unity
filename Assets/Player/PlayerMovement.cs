@@ -28,19 +28,23 @@ public class PlayerMovement : MonoBehaviour
     {
         rigidbody = GetComponent<Rigidbody>();
         collider = GetComponent<BoxCollider>();
-        distToGround = collider.bounds.extents.y;
-
+        distToGround = collider.bounds.extents.y;        
+        
     }
 
     bool IsGrounded() {
-        return Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.1f);
+        // Show!
+        // Só não entendi pq não está pegando o Player haha, mas depois vemos isso.
+        // Aqui vou explicar sobre Layers pra vcs
+        return Physics.Raycast(transform.position, Vector3.down, distToGround + 0.1f);
     }
 
     void Update()
     {   
         verticalMovement = Input.GetAxisRaw("Vertical");
         horizontalMovement = Input.GetAxisRaw("Horizontal");
-        if (Input.GetKeyDown("space")) {
+        // Evitem usar string para os GetKey, usem os KeyCode
+        if (Input.GetKeyDown(KeyCode.Space)) {
             jumped = true;
         }
 
@@ -48,6 +52,7 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
+        // Certinho o que tinha que ser feito, mas, sugiro trocar por Vector3.down * rigidbody.velocity.y
         rigidbody.velocity = new Vector3(0, rigidbody.velocity.y, 0) + verticalMovement * moveSpeed * transform.forward;
         rigidbody.MoveRotation(
             Quaternion.Euler(0f, transform.eulerAngles.y + (horizontalMovement * rotationSpeed * Time.fixedDeltaTime), 0f)
@@ -59,6 +64,12 @@ public class PlayerMovement : MonoBehaviour
             
             if (!secondJump && firstJump){
                 Debug.Log("Pulo2");
+                // Não precisa do Time.fixedDeltaTime aqui. O AddForce adiciona a força e deixa pra física controlar, já que ele não vai alterar todo frame
+                // Só precisa adicionar o valor.
+                //
+                // EU ACHO que fica mais legível se, em vez de mandar 3 parametros, mandar só 1 com Vector3.up * jumpForce
+                //
+                // Centralizar isso para uma função, não precisamos chamar 2 vezes a mesma coisa
                 rigidbody.AddForce(0f, jumpForce * Time.fixedDeltaTime, 0f);
                 secondJump = true;
             } else if (!firstJump) {
