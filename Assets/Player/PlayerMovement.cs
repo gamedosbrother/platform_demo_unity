@@ -14,7 +14,6 @@ public class PlayerMovement : MonoBehaviour
 
     private float verticalMovement;
     private float horizontalMovement;
-    private Vector3 velocity;
 
     void Awake()
     {
@@ -30,7 +29,6 @@ public class PlayerMovement : MonoBehaviour
     void FixedUpdate()
     {
         rigidbody.velocity = transform.forward * verticalMovement * moveSpeed;
-        velocity = rigidbody.velocity;
         rigidbody.MoveRotation(
             Quaternion.Euler(0f, transform.eulerAngles.y + (horizontalMovement * rotationSpeed * Time.fixedDeltaTime), 0f)
         );
