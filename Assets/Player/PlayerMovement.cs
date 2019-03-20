@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     private float rotationSpeed;
     [SerializeField]
+    private float jumpHeight;
     private float jumpForce;
 
     private Rigidbody rigidbody;
@@ -20,10 +21,6 @@ public class PlayerMovement : MonoBehaviour
     private float distToGround;
     private bool hasJumpedLastFrame;
     private bool hasJumped;
-    private bool firstJump;
-    private bool secondJump;
-    
-
 
     void Awake()
     {
@@ -31,12 +28,12 @@ public class PlayerMovement : MonoBehaviour
         collider = GetComponent<BoxCollider>();
         distToGround = collider.bounds.extents.y;        
         
+        float gravity = Physics.gravity.y;
+        jumpForce = Mathf.Sqrt( jumpHeight * 2f * -gravity );
     }
 
     bool IsGrounded() 
     {
-        // Show!
-        // Aqui vou explicar sobre Layers pra vcs
         return Physics.Raycast(transform.position, Vector3.down, distToGround + 0.1f);
     }
 
@@ -44,7 +41,7 @@ public class PlayerMovement : MonoBehaviour
     {   
         verticalMovement = Input.GetAxisRaw("Vertical");
         horizontalMovement = Input.GetAxisRaw("Horizontal");
-        // Evitem usar string para os GetKey, usem os KeyCode
+        
         if (Input.GetKeyDown(KeyCode.Space)) {
             hasJumpedLastFrame = true;
         }

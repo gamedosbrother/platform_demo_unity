@@ -200,5 +200,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  rotationSpeed: 30
-  jumpForce: 0
+  rotationSpeed: 100
+  jumpHeight: 2.1
