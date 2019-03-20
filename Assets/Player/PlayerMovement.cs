@@ -20,7 +20,7 @@ public class PlayerMovement : MonoBehaviour
     private float horizontalMovement;
     private float distToGround;
     private bool hasJumpedLastFrame;
-    private bool hasJumped;
+    private bool canAirJump;
 
     void Awake()
     {
@@ -64,22 +64,25 @@ public class PlayerMovement : MonoBehaviour
             Quaternion.Euler(0f, transform.eulerAngles.y + (horizontalMovement * rotationSpeed * Time.fixedDeltaTime), 0f)
         );
 
+        if (isGrounded) 
+        {
+            canAirJump = true;
+        }
+
         if (hasJumpedLastFrame)
         {
             hasJumpedLastFrame = false;
+
             if (isGrounded)
             {
-                hasJumped = true;
                 Jump();
-            } else if (hasJumped) 
+            } else if (canAirJump)
             {
                 Jump();
-                hasJumped = false;
+                canAirJump = false;
             }
         }
         
-        
-
     }
 
 }
