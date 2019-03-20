@@ -19,12 +19,12 @@ public class PlayerMovement : MonoBehaviour
     private float dashDeaccelerationTime;
 
     private Rigidbody rigidbody;
-    private BoxCollider collider;
+    private CapsuleCollider collider;
 
     private float verticalMovement;
     private float horizontalMovement;
 
-    private float distToGround;
+    private float distanceToGround;
 
     private float jumpForce;
     private bool hasJumpedLastFrame;
@@ -39,8 +39,8 @@ public class PlayerMovement : MonoBehaviour
     void Awake()
     {
         rigidbody = GetComponent<Rigidbody>();
-        collider = GetComponent<BoxCollider>();
-        distToGround = collider.bounds.extents.y;        
+        collider = GetComponent<CapsuleCollider>();
+        distanceToGround = collider.bounds.extents.y;        
         
         float gravity = Physics.gravity.y;
         jumpForce = Mathf.Sqrt( jumpHeight * 2f * -gravity );
@@ -50,7 +50,7 @@ public class PlayerMovement : MonoBehaviour
 
     bool IsGrounded() 
     {
-        return Physics.Raycast(transform.position, Vector3.down, distToGround + 0.1f);
+        return Physics.Raycast(transform.position, Vector3.down, distanceToGround + 0.1f);
     }
 
     void Update()
