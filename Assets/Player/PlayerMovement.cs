@@ -21,6 +21,11 @@ public class PlayerMovement : MonoBehaviour
     private float distToGround;
     private bool hasJumpedLastFrame;
     private bool canAirJump;
+    private bool canGlide;
+    private float glideForce;
+    [SerializeField]
+    private float fallTimeMultiplier;
+    private bool isGliding;
 
     void Awake()
     {
@@ -30,6 +35,7 @@ public class PlayerMovement : MonoBehaviour
         
         float gravity = Physics.gravity.y;
         jumpForce = Mathf.Sqrt( jumpHeight * 2f * -gravity );
+        glideForce = -gravity / fallTimeMultiplier;
     }
 
     bool IsGrounded() 
@@ -44,7 +50,13 @@ public class PlayerMovement : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.Space)) {
             hasJumpedLastFrame = true;
+            isGliding = true;
         }
+
+        if (Input.GetKeyUp(KeyCode.Space)) {
+            isGliding = false;
+        }
+
 
     }
 
@@ -52,6 +64,13 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector3 velocity = rigidbody.velocity;
         velocity.y = jumpForce;
+        rigidbody.velocity = velocity;
+    }
+
+    void Glide() 
+    {
+        Vector3 velocity = rigidbody.velocity;
+        velocity.y = velocity.y + glideForce * Time.fixedDeltaTime;
         rigidbody.velocity = velocity;
     }
 
@@ -67,6 +86,15 @@ public class PlayerMovement : MonoBehaviour
         if (isGrounded) 
         {
             canAirJump = true;
+            canGlide = false;
+        }
+
+
+        if (isGliding && rigidbody.velocity.y < 0f) { 
+
+            Glide();
+            Debug.Log("ta voando");
+
         }
 
         if (hasJumpedLastFrame)
@@ -80,6 +108,8 @@ public class PlayerMovement : MonoBehaviour
             {
                 Jump();
                 canAirJump = false;
+                canGlide = true;
+
             }
         }
         
