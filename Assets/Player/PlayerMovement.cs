@@ -11,21 +11,30 @@ public class PlayerMovement : MonoBehaviour
     private float rotationSpeed;
     [SerializeField]
     private float jumpHeight;
-    private float jumpForce;
+    [SerializeField]
+    private float fallTimeMultiplier;
+    [SerializeField]
+    private float dashSpeed;
+    [SerializeField]
+    private float dashDeaccelerationTime;
 
     private Rigidbody rigidbody;
     private BoxCollider collider;
 
     private float verticalMovement;
     private float horizontalMovement;
+
     private float distToGround;
+
+    private float jumpForce;
     private bool hasJumpedLastFrame;
     private bool canAirJump;
-    private bool canGlide;
+
     private float glideForce;
-    [SerializeField]
-    private float fallTimeMultiplier;
     private bool isGliding;
+
+    private Vector3 dashVelocity;
+    private float dashDeacceleration;
 
     void Awake()
     {
@@ -36,6 +45,7 @@ public class PlayerMovement : MonoBehaviour
         float gravity = Physics.gravity.y;
         jumpForce = Mathf.Sqrt( jumpHeight * 2f * -gravity );
         glideForce = -gravity / fallTimeMultiplier;
+        dashDeacceleration = dashSpeed / dashDeaccelerationTime;
     }
 
     bool IsGrounded() 
@@ -48,15 +58,20 @@ public class PlayerMovement : MonoBehaviour
         verticalMovement = Input.GetAxisRaw("Vertical");
         horizontalMovement = Input.GetAxisRaw("Horizontal");
         
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
             hasJumpedLastFrame = true;
             isGliding = true;
         }
-
-        if (Input.GetKeyUp(KeyCode.Space)) {
+        else if (Input.GetKeyUp(KeyCode.Space))
+        {
             isGliding = false;
         }
 
+        if(Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            dashVelocity = transform.forward * dashSpeed;
+        }
 
     }
 
@@ -78,22 +93,24 @@ public class PlayerMovement : MonoBehaviour
     {
         bool isGrounded = IsGrounded();
 
-        rigidbody.velocity = Vector3.up * rigidbody.velocity.y + verticalMovement * moveSpeed * transform.forward;
+        Vector3 moveVelocity = transform.forward * verticalMovement * moveSpeed;
+
+        rigidbody.velocity = (Vector3.up * rigidbody.velocity.y) + moveVelocity + dashVelocity;
         rigidbody.MoveRotation(
             Quaternion.Euler(0f, transform.eulerAngles.y + (horizontalMovement * rotationSpeed * Time.fixedDeltaTime), 0f)
         );
 
+        dashVelocity = Vector3.MoveTowards(dashVelocity, Vector3.zero, dashDeacceleration * Time.fixedDeltaTime);
+
         if (isGrounded) 
         {
             canAirJump = true;
-            canGlide = false;
         }
 
 
         if (isGliding && rigidbody.velocity.y < 0f) { 
 
             Glide();
-            Debug.Log("ta voando");
 
         }
 
@@ -104,12 +121,11 @@ public class PlayerMovement : MonoBehaviour
             if (isGrounded)
             {
                 Jump();
-            } else if (canAirJump)
+            }
+            else if (canAirJump)
             {
                 Jump();
                 canAirJump = false;
-                canGlide = true;
-
             }
         }
         
