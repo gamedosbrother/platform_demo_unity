@@ -1403,12 +1403,12 @@ PrefabInstance:
     - target: {fileID: 4038120532012280818, guid: e0848b1b30b41fc4b86cd2f188d30e78,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -21.5
+      value: -21.74
       objectReference: {fileID: 0}
     - target: {fileID: 4038120532012280818, guid: e0848b1b30b41fc4b86cd2f188d30e78,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.642
+      value: 1.55
       objectReference: {fileID: 0}
     - target: {fileID: 4038120532012280818, guid: e0848b1b30b41fc4b86cd2f188d30e78,
         type: 3}
@@ -1454,21 +1454,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4038120532012280823, guid: e0848b1b30b41fc4b86cd2f188d30e78,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4110128732957635278, guid: e0848b1b30b41fc4b86cd2f188d30e78,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3833231363023132307, guid: e0848b1b30b41fc4b86cd2f188d30e78,
-        type: 3}
-      propertyPath: fallTimeMultiplier
-      value: 1.4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e0848b1b30b41fc4b86cd2f188d30e78, type: 3}
